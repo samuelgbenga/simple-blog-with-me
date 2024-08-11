@@ -2,6 +2,7 @@ package uk.samuel.post_maker.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import uk.samuel.post_maker.payload.request.PostRequestDto;
 import uk.samuel.post_maker.payload.request.UserLoginRequestDto;
@@ -15,11 +16,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:5173") // Allow requests from this origin
 public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<GeneralResponseDto> signup(@RequestBody UserSignupRequestDto requestDto){
+    public ResponseEntity<GeneralResponseDto> signup(@Validated @RequestBody UserSignupRequestDto requestDto){
 
         GeneralResponseDto generalResponseDto = userService.signup(requestDto);
 
