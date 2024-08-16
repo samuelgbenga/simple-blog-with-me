@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 import { registerUser } from "../api/registerUser";
 import { Navigate } from "react-router-dom";
+import { requestPermission } from "../requestPermission";
+
 
 const RegistrationPage = () => {
   const [regResponse, setRegResponse] = useState(null);
@@ -27,6 +29,9 @@ const RegistrationPage = () => {
     try {
       const response = await registerUser(userInfo, {});
       setRegResponse(response);
+
+      // Request notification permission and save token
+      await requestPermission();
     } catch (error) {
       //console.error("Error registering user:", error);
     } finally {
