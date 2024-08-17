@@ -3,23 +3,18 @@ package uk.samuel.post_maker.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.samuel.post_maker.entity.Post;
-import uk.samuel.post_maker.entity.PushNotification;
 import uk.samuel.post_maker.entity.UserEntity;
 import uk.samuel.post_maker.exception.GeneralExceptionHandler;
-import uk.samuel.post_maker.payload.request.FireBaseNotificationRequestDto;
 import uk.samuel.post_maker.payload.request.PostRequestDto;
 import uk.samuel.post_maker.payload.request.UserLoginRequestDto;
 import uk.samuel.post_maker.payload.request.UserSignupRequestDto;
 import uk.samuel.post_maker.payload.response.GeneralResponseDto;
 import uk.samuel.post_maker.payload.response.PostResponseDto;
-import uk.samuel.post_maker.payload.response.PushNotificationResponseDto;
 import uk.samuel.post_maker.repository.PostRepository;
 import uk.samuel.post_maker.repository.UserRepository;
-import uk.samuel.post_maker.service.PushNotificationService;
 import uk.samuel.post_maker.service.UserService;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,10 +24,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final PostRepository postRepository;
-
-    private final PushNotificationService pushNotificationService;
-
-    private final FCMService fcmService;
 
 
     @Override
@@ -107,22 +98,6 @@ public class UserServiceImpl implements UserService {
                 .user(user)
                 .build();
 
-
-        FireBaseNotificationRequestDto fireBaseNotificationRequestDto = FireBaseNotificationRequestDto.builder()
-                .title(post.getUser().getUsername()+" created A new Post")
-                .body(post.getPostTitle())
-                .build();
-
-        // get the list of all available browser token
-        List<PushNotificationResponseDto> pushNotificationsTokens = pushNotificationService.getAllToken();
-
-        for(PushNotificationResponseDto responseDto: pushNotificationsTokens){
-            fireBaseNotificationRequestDto.setToken(responseDto.getToken());
-
-            createPostPushNotification(fireBaseNotificationRequestDto);
-        }
-
-
         postRepository.save(post);
 
         return GeneralResponseDto.builder()
@@ -145,16 +120,4 @@ public class UserServiceImpl implements UserService {
 
         return userPosts;
     }
-
-    private void createPostPushNotification(FireBaseNotificationRequestDto request){
-
-        try {
-            fcmService.sendMessageToToken(request);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

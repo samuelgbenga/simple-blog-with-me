@@ -18,12 +18,3 @@ public interface UserService {
 
     List<PostResponseDto> getAllPost(String username);
 }
-
-// FileInputStream serviceAccount =
-// new FileInputStream("path/to/serviceAccountKey.json");
-
-// FirebaseOptions options = new FirebaseOptions.Builder()
-//   .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-//   .build();
-
-// FirebaseApp.initializeApp(options);

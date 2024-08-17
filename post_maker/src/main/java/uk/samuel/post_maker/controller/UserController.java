@@ -10,7 +10,6 @@ import uk.samuel.post_maker.payload.request.UserSignupRequestDto;
 import uk.samuel.post_maker.payload.response.GeneralResponseDto;
 import uk.samuel.post_maker.payload.response.PostResponseDto;
 import uk.samuel.post_maker.service.UserService;
-import uk.samuel.post_maker.service.impl.FCMService;
 
 import java.util.List;
 
@@ -20,7 +19,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173") // Allow requests from this origin
 public class UserController {
     private final UserService userService;
-
 
     @PostMapping("/signup")
     public ResponseEntity<GeneralResponseDto> signup(@Validated @RequestBody UserSignupRequestDto requestDto){
